@@ -56,15 +56,25 @@ const D0=`امکان و گردشگری|4|6|پارک,موزه,هتل,تله‌ک�
 const S0='گربه روی دیوار نشسته است,مادربزرگ در حال بافتن شال است,کودکی بادبادک پرواز می‌دهد,ماهیگیر در قایق ماهی می‌گیرد,خانواده دور سفره نشسته‌اند,پیرمرد در پارک شطرنج بازی می‌کند';
 const RA='با دست غیر اصلی,بدون برداشتن قلم از کاغذ,با چشم بسته,فقط با خط صاف,با دو دست همزمان,بدون نوشتن عدد و حرف,فقط با دایره,فقط با یک رنگ,بدون پاک کردن,با آرنج';
 const RP='فقط با یک دست,بدون حرکت پاها,با حرکت آهسته,بدون اشاره به هیچ چیز,با دست‌های پشت کمر,فقط با صورت,بدون حرکت سر,نشسته روی صندلی,فقط با نیم‌تنه بالا,با چشم بسته';
+const WD0={3:'چتر,عینک,دوچرخه,قیچی,آینه,کفش,ساعت,کلید,چای,تلفن,نردبان,جاروبرقی,بالن,گیتار,ماشین‌لباسشویی,دوربین,کوله‌پشتی,بستنی,آتش‌بازی,قایق',
+5:'خوابیدن,دویدن,شنا کردن,آشپزی,رانندگی,نقاشی کشیدن,عطسه کردن,اسکی,گریه کردن,رقصیدن,پرواز,دندان‌درد,خرید کردن,سرما خوردن,تلفن زدن,دوچرخه‌سواری,موزیک گوش دادن,مسواک زدن,دوش گرفتن,سلفی گرفتن',
+6:'مدرسه,بیمارستان,فرودگاه,کتابخانه,سینما,مسجد,ورزشگاه,رستوران,دریا,کوه,جنگل,کارخانه,آشپزخانه,باغ‌وحش,قطار,عروسی,تولد,امتحان,سفر,مهمانی'};
+const WDF=()=>({3:WD0[3].split(','),5:WD0[5].split(','),6:WD0[6].split(',')});
 function defaults(){const cats={};D0.split('\n').forEach(l=>{const[a,b,c,e,h]=l.split('|');cats[a]={p:[+b,+c],e:e.split(','),h:h.split(',')}});
-return{logo:'',cats,sent:S0.split(','),rA:RA.split(','),rP:RP.split(','),st:{1:{t:120,r:5},2:{t:150,p:1,n:8,r:1},3:{p:2,n:5},4:{t:120,p:3,r:1},5:{t:120,p:3,r:1},6:{t:120,p:1,n:5},7:{t:180,p:5,r:1}},pre:[{n:'گروه اول',s:[1,2,4]},{n:'گروه دوم',s:[5,7,6,3]}],def:0,v:2}}
+return{logo:'',cats,wd:WDF(),sent:S0.split(','),rA:RA.split(','),rP:RP.split(','),st:{1:{t:120,r:5},2:{t:150,p:1,n:8,r:1},3:{p:2,n:5},4:{t:120,p:3,r:1},5:{t:120,p:3,r:1},6:{t:120,p:1,n:5},7:{t:180,p:5,r:1}},pre:[{n:'گروه اول',s:[1,2,4]},{n:'گروه دوم',s:[5,7,6,3]}],def:0,v:2}}
 let cfg,G,A={tab:0,cat:0},armed=0;
 try{cfg=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 if(!cfg||!cfg.cats)cfg=defaults();Object.assign(SN,cfg.nm||{});let PS=cfg.def||0;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch(e){}};
 if(cfg.st&&cfg.st[6]&&cfg.st[6].n==null)cfg.st[6].n=5;
 if(cfg.v!=2){const o=cfg.st[4]||{};cfg.st[7]={t:o.t2||180,p:o.p2||5};delete o.t2;delete o.p2;cfg.pre=defaults().pre;cfg.def=0;cfg.v=2;save()}
-[1,2,4,5,7].forEach(i=>{const o=cfg.st[i];if(o&&o.r==null)o.r=i==1?(cfg.pre&&cfg.pre[0]&&cfg.pre[0].tn)||5:1});save();
+WD();[1,2,4,5,7].forEach(i=>{const o=cfg.st[i];if(o&&o.r==null)o.r=i==1?(cfg.pre&&cfg.pre[0]&&cfg.pre[0].tn)||5:1});save();
+function WD(){const d=WDF();if(!cfg.wd||typeof cfg.wd!='object')cfg.wd={};[3,5,6].forEach(i=>{if(!Array.isArray(cfg.wd[i])||!cfg.wd[i].length)cfg.wd[i]=d[i]})}
+function wl(id){WD();return cfg.wd[id]}
+function ESP6(){if(!Array.isArray(cfg.sp6)||cfg.sp6.length!=20)cfg.sp6=Array.from({length:20},(_,i)=>(cfg.sp6&&Array.isArray(cfg.sp6[i])?cfg.sp6[i]:[]))}
+function secW6(n){ESP6();G.us6=G.us6||new Set();const f=m=>cfg.sp6.map((a,i)=>i).filter(i=>cfg.sp6[i].length>=m&&!G.us6.has(i));
+let av=f(n);if(!av.length){G.us6.clear();av=f(n)}if(!av.length)av=f(1);if(!av.length)return many(wl(6),n);
+const i=sh(av);G.us6.add(i);const w=cfg.sp6[i].slice(0,n);w.forEach(mark);return w.length<n?w.concat(many(wl(6),n-w.length)):w}
 function ESP(){if(!Array.isArray(cfg.sp)||cfg.sp.length!=20)cfg.sp=Array.from({length:20},(_,i)=>(cfg.sp&&Array.isArray(cfg.sp[i])?cfg.sp[i]:[]))}
 const $=s=>document.querySelector(s),app=()=>({set innerHTML(h){$('#app').innerHTML=h;document.body.scrollTop=0}}),sh=a=>a[Math.floor(Math.random()*a.length)];
 const pool=()=>Object.values(cfg.cats).flatMap(c=>c.e.concat(c.h));
@@ -92,8 +102,8 @@ function begin(){if(G.sid==3||G.sid==6)G.pl=[0,1].map(k=>Math.max(1,Math.min(50,
 function turn(){if(G.qi>=G.q.length){G.si++;G.done.add(G.ids[0]);return hub()}
 const q=G.q[G.qi],id=G.id,S=cfg.st[id],c=G.cur={t:q.t,b:q.b,chk:[],sc:0,i:0};
 if(id==1)return pickCat();
-if(id==2)c.w=secW();else if(id==3)c.w=many(pool(),G.pl[c.t]);else if(id==6)c.w=many(pool(),Math.max(1,G.pl[c.t]-1));
-else if(id==4)c.w=[pickW(pool().concat(cfg.sent))];else c.w=[pickW(pool())];
+if(id==2)c.w=secW();else if(id==3)c.w=many(wl(3),G.pl[c.t]);else if(id==6)c.w=secW6(Math.max(5,Math.min(9,G.pl[c.t]-1)));
+else if(id==4)c.w=[pickW(pool().concat(cfg.sent))];else c.w=[pickW(wl(5))];
 handoff(id==5||(id==4&&c.b)?'restr()':'play()')}
 function secW(){ESP();const f=()=>cfg.sp.map((a,i)=>i).filter(i=>cfg.sp[i].length&&!G.us.has(i));let av=f();if(!av.length){G.us.clear();av=f()}if(!av.length)return many(pool(),8);const i=sh(av);G.us.add(i);cfg.sp[i].slice(0,8).forEach(mark);return cfg.sp[i].slice(0,8)}
 function handoff(fn){app().innerHTML=head()+sb()+`<div class="c"><h3>گوشی را به اجراکننده بدهید</h3><p>نوبت ${E(G.tm[G.cur.t].n)}${G.cur.b?' · بخش با محدودیت':''}</p></div><button class="b" onclick="${fn}">نمایش کلمه</button>`}
@@ -130,28 +140,35 @@ const lines=id=>$(id).value.split('\n').map(s=>s.trim()).filter(Boolean);
 const chips=v=>`<div>${v.map(w=>`<span class="ch ${uw()[w]?'y':''}">${E(w)}</span>`).join('')}</div>`;
 const ta=(id,l,v,hl)=>`<label>${l}</label>${hl?chips(v):''}<textarea id="${id}" rows="9">${E(v.join('\n'))}</textarea>`;
 function adm(){const v=A.v||0,ks=Object.keys(cfg.cats);
-ESP();let h=`<div class="c"><b>پنل مدیریت</b> · <a href="#" onclick="event.preventDefault();home();return false">بازگشت به بازی</a></div>`;
-if(!v)h+=`<div class="grid">${Object.keys(SN).map(id=>`<button style="padding:24px 8px" onclick="A.v=${id};adm()">${id}. ${SN[id]}</button>`).join('')}</div><button class="b g" onclick="A.v='pre';adm()">گروه‌های بازی (مرحله‌های هر نوع)</button><button class="b g" onclick="A.v='misc';adm()">پشتیبان</button><button class="b g" onclick="cfg.uw={};save();adm()">پاک کردن هایلایت زرد لغت‌ها</button><button class="b g" onclick="cfg.bell=cfg.bell===0?1:0;save();adm()">بوق پایان زمان: ${cfg.bell===0?'خاموش':'روشن'}</button>`;
-else{h+=`<button class="g" onclick="${v==1&&A.k!=null?'A.k=null':(v==2&&A.s!=null)?'A.s=null':'A.v=0;A.k=null;A.s=null'};armed=0;adm()">← بازگشت</button>`;
+ESP();ESP6();let h=`<div class="c"><b>پنل مدیریت</b> · <a href="#" onclick="event.preventDefault();home();return false">بازگشت به بازی</a></div>`;
+if(!v)h+=`<div class="grid">${Object.keys(SN).map(id=>`<button style="padding:24px 8px" onclick="A.v=${id};adm()">${id}. ${SN[id]}</button>`).join('')}</div><button class="b g" onclick="A.v='pre';adm()">گروه‌های بازی (مرحله‌های هر نوع)</button><button class="b g" onclick="A.v='misc';adm()">پشتیبان</button><button class="b g" onclick="cfg.uw={};save();adm()">پاک کردن هایلایت زرد لغت‌ها</button><button class="b g" onclick="delYellow()">حذف لغت‌های زرد (استفاده‌شده)</button><button class="b g" onclick="cfg.bell=cfg.bell===0?1:0;save();adm()">بوق پایان زمان: ${cfg.bell===0?'خاموش':'روشن'}</button>`;
+else{h+=`<button class="g" onclick="${v==1&&A.k!=null?'A.k=null':((v==2||v==6)&&A.s!=null)?'A.s=null':'A.v=0;A.k=null;A.s=null'};armed=0;adm()">← بازگشت</button>`;
 if(typeof v=='number'){h+=`<div class="c"><h2>${E(SN[v])}</h2><label>نام مرحله (در صفحه اول دیده می‌شود)</label><input value="${E(SN[v])}" oninput="cfg.nm=cfg.nm||{};cfg.nm[${v}]=this.value;SN[${v}]=this.value;save()" onchange="cfg.nm=cfg.nm||{};cfg.nm[${v}]=this.value;SN[${v}]=this.value;save()">${Object.keys(cfg.st[v]).filter(k=>!(v==2&&k=='n')).map(k=>`<label>${(v==3||v==6)&&k=='n'?'تعداد نفرات':FL[k]}</label><input type="text" inputmode="numeric" data-n="1" value="${cfg.st[v][k]}" oninput="setSt(${v},'${k}',this.value)" onchange="setSt(${v},'${k}',this.value)">`).join('')}</div>`;
 if(v==1){if(A.k==null)h+=`<div class="grid">${ks.map((k,i)=>`<button class="g" onclick="A.k=${i};adm()">${E(k)} (${cfg.cats[k].e.length+cfg.cats[k].h.length})</button>`).join('')}</div>`;
 else{const k=ks[A.k],c=cfg.cats[k];h+=`<div class="c"><h3>${E(k)}</h3><label>امتیاز آسان / سخت</label><div class="grid"><input id="pa" type="text" inputmode="numeric" data-n="1" value="${c.p[0]}"><input id="pb" type="text" inputmode="numeric" data-n="1" value="${c.p[1]}"></div>${ta('te','لغت‌های آسان (هر خط یک مورد · زرد = استفاده‌شده)',c.e,1)}${ta('th','لغت‌های سخت',c.h,1)}<button class="b" onclick="svc(${A.k})">ذخیره</button></div>`}}
-else if(v==4||v==7)h+=`<div class="c">${ta('ts','جمله‌های نقاشی (علاوه بر لغت‌های دسته‌ها · زرد = استفاده‌شده)',cfg.sent,1)}${ta('ra','محدودیت‌های نقاشی',cfg.rA)}<button class="b" onclick="svs()">ذخیره</button></div>`;
-else if(v==5)h+=`<div class="c">${ta('rp','محدودیت‌ها',cfg.rP)}<button class="b" onclick="svp()">ذخیره</button></div>`;
+else if(v==4||v==7)h+=`<div class="c">${ta('ts','جمله‌های نقاشی (علاوه بر لغت‌های دسته‌ها · زرد = استفاده‌شده)',cfg.sent,1)}${v==7?ta('ra','محدودیت‌های نقاشی',cfg.rA):''}<button class="b" onclick="svs()">ذخیره</button></div>`;
+else if(v==5)h+=`<div class="c">${ta('wl','لغت‌های این مرحله (هر خط یک لغت · زرد = استفاده‌شده)',wl(5),1)}${ta('rp','محدودیت‌ها',cfg.rP)}<button class="b" onclick="svp()">ذخیره</button></div>`;
 else if(v==2)h+=(A.s==null?`<div class="c"><b>۲۰ قسمت لغت</b><p>هر قسمت ۸ لغت دارد. در هر نوبت یکی از قسمت‌های پر به‌صورت تصادفی انتخاب می‌شود.</p></div><div class="grid">${cfg.sp.map((a,i)=>`<button class="${a.length?'':'g'}" style="${a.some(w=>uw()[w])?'background:#ffe14d;color:#231f20':''}" onclick="A.s=${i};adm()">قسمت ${i+1} (${a.length}/8)</button>`).join('')}</div>`:`<div class="c"><h3>قسمت ${A.s+1}</h3>${ta('sw','لغت‌ها (هر خط یک لغت، حداکثر ۸ لغت · زرد = استفاده‌شده)',cfg.sp[A.s],1)}<button class="b" onclick="svsec(${A.s})">ذخیره</button></div>`);
-else h+=`<div class="c">لغت‌های این مرحله از دسته‌های مرحله ۱ برداشته می‌شود.<button class="b g" onclick="A.v=1;A.k=null;adm()">ویرایش لغت‌ها</button></div>`}
+else if(v==6)h+=(A.s==null?`<div class="c"><b>۲۰ قسمت لغت اسپیکر</b><p>هر قسمت تا ۹ لغت دارد (مستقل از مرحله سرعتی). در هر نوبت یک قسمت پر به‌صورت تصادفی انتخاب می‌شود و بسته به تعداد بازیکن ۵ تا ۹ لغت اول آن نشان داده می‌شود (تعداد بازیکن منهای ۱). اگر همه قسمت‌ها خالی باشند، از لغت‌های پیش‌فرض عمومی همین مرحله استفاده می‌شود.</p></div><div class="grid">${cfg.sp6.map((a,i)=>`<button class="${a.length?'':'g'}" style="${a.some(w=>uw()[w])?'background:#ffe14d;color:#231f20':''}" onclick="A.s=${i};adm()">قسمت ${i+1} (${a.length}/9)</button>`).join('')}</div>`:`<div class="c"><h3>قسمت ${A.s+1}</h3>${ta('sw','لغت‌ها (هر خط یک لغت، حداکثر ۹ لغت · زرد = استفاده‌شده)',cfg.sp6[A.s],1)}<button class="b" onclick="svsec6(${A.s})">ذخیره</button></div>`);
+else h+=`<div class="c">${ta('wl','لغت‌های این مرحله (هر خط یک لغت · زرد = استفاده‌شده)',wl(v),1)}<button class="b" onclick="svw(${v})">ذخیره</button></div>`}
 else if(v=='pre')h+=cfg.pre.map((p,pi)=>`<div class="c"><input value="${E(p.n)}" oninput="cfg.pre[${pi}].n=this.value;save()" onchange="cfg.pre[${pi}].n=this.value;save()">`+p.s.map((id,j)=>`<div>${SN[id]} <button class="g" onclick="mv(${pi},${j},-1)">↑</button><button class="g" onclick="mv(${pi},${j},1)">↓</button><button class="g" onclick="rm(${pi},${j})">✕</button></div>`).join('')+Object.keys(SN).filter(id=>!p.s.includes(+id)).map(id=>`<button class="g" onclick="ad(${pi},${id})">+ ${SN[id]}</button>`).join('')+`<div><button class="${cfg.def==pi?'':'g'}" onclick="cfg.def=${pi};save();adm()">پیش‌فرض</button>${cfg.pre.length>1?`<button class="g" onclick="dp(${pi})">حذف</button>`:''}</div></div>`).join('')+`<button class="b" onclick="cfg.pre.push({n:'پیش‌تنظیم جدید',s:[1,2,3,4,5,6]});save();adm()">+ پیش‌تنظیم جدید</button>`;
 else h+=`<div class="c"><b>پشتیبان</b><p>این متن را کپی و جایی نگه دارید. برای بازیابی، متن را اینجا بچسبانید.</p><textarea id="bk" rows="6">${E(JSON.stringify({...cfg,logo:''}))}</textarea><button class="b" onclick="rs2()">بازیابی از متن</button><button class="b g" onclick="rz()">${armed?'مطمئنی؟ دوباره بزن':'بازگشت به پیش‌فرض'}</button></div>`}
 app().innerHTML=h}
 function svc(i){const c=cfg.cats[Object.keys(cfg.cats)[i]];c.e=lines('#te');c.h=lines('#th');c.p=[+$('#pa').value,+$('#pb').value];save();adm()}
+function delYellow(){const u=uw(),n=Object.keys(u).length;if(!n)return alert('لغت زردی وجود ندارد');if(!confirm('همه لغت‌های زرد ('+n+' لغت) از تمام لیست‌ها حذف شوند؟ این کار برگشت‌پذیر نیست.'))return;
+const f=a=>a.filter(w=>!u[w]);Object.values(cfg.cats).forEach(c=>{c.e=f(c.e);c.h=f(c.h)});cfg.sent=f(cfg.sent||[]);
+ESP();ESP6();cfg.sp=cfg.sp.map(f);cfg.sp6=cfg.sp6.map(f);if(cfg.wd)[3,5,6].forEach(i=>{if(Array.isArray(cfg.wd[i]))cfg.wd[i]=f(cfg.wd[i])});
+cfg.uw={};save();adm()}
+function svsec6(i){cfg.sp6[i]=lines('#sw').slice(0,9);save();A.s=null;adm()}
 function svsec(i){cfg.sp[i]=lines('#sw').slice(0,8);save();A.s=null;adm()}
-function svs(){cfg.sent=lines('#ts');cfg.rA=lines('#ra');save();adm()}
-function svp(){cfg.rP=lines('#rp');save();adm()}
+function svs(){cfg.sent=lines('#ts');if($('#ra'))cfg.rA=lines('#ra');save();adm()}
+function svp(){cfg.rP=lines('#rp');cfg.wd[5]=lines('#wl');WD();save();adm()}
+function svw(i){cfg.wd[i]=lines('#wl');WD();save();adm()}
 function mv(p,j,d){const s=cfg.pre[p].s,k=j+d;if(k<0||k>=s.length)return;[s[j],s[k]]=[s[k],s[j]];save();adm()}
 function rm(p,j){cfg.pre[p].s.splice(j,1);save();adm()}
 function ad(p,id){cfg.pre[p].s.push(+id);save();adm()}
 function dp(p){cfg.pre.splice(p,1);cfg.def=0;save();adm()}
-function rs2(){try{const d=JSON.parse($('#bk').value);if(!d.cats)throw 0;d.logo=cfg.logo;cfg=d;save();adm()}catch(e){alert('متن نامعتبر است')}}
+function rs2(){try{const d=JSON.parse($('#bk').value);if(!d.cats)throw 0;d.logo=cfg.logo;cfg=d;WD();ESP6();save();adm()}catch(e){alert('متن نامعتبر است')}}
 function rz(){if(!armed){armed=1;return adm()}armed=0;const l=cfg.logo;cfg=defaults();cfg.logo=l;save();adm()}
 addEventListener('input',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.n){const v=t.value.replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);if(v!==t.value)t.value=v}});
 function route(){location.hash=='#admin'?adm():home()}
