@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="رودی">
+<title>رودی | پانتومیم</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff7f4;--tx:#231f20;--pr:#ef492c;--cd:#ffffff;--bd:#f0d9d2;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#231f20;--tx:#fff7f4;--cd:#302a2b;--bd:#4a4041}}
+:root[data-theme="dark"]{--bg:#231f20;--tx:#fff7f4;--cd:#302a2b;--bd:#4a4041}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px Vazirmatn,system-ui,Tahoma,sans-serif;-webkit-text-size-adjust:100%;overflow-anchor:none;position:fixed;inset:0;overflow-y:auto;overscroll-behavior:none;-webkit-overflow-scrolling:touch}
+html{height:100%;overflow:hidden}
+#app{max-width:480px;margin:auto;padding:14px}
+button{font:inherit;background:var(--pr);color:#fff;border:0;border-radius:14px;padding:12px 16px;margin:4px 0;cursor:pointer}
+button.g{background:var(--cd);color:var(--tx);border:2px solid var(--bd)}
+.b{display:block;width:100%}
+.c{background:var(--cd);border:2px solid var(--bd);border-radius:16px;padding:12px;margin:8px 0}
+input,select,textarea{font:inherit;width:100%;box-sizing:border-box;padding:10px;border-radius:12px;border:2px solid var(--bd);background:var(--cd);color:var(--tx);margin:4px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.big{font-size:30px;font-weight:700;text-align:center;padding:16px 8px;color:var(--pr)}
+.sc{display:flex;justify-content:space-around;font-weight:700}
+.ng{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.ng button{padding:18px 0;font-size:22px;font-weight:700;margin:0}
+.ch{display:inline-block;padding:4px 10px;margin:3px;border-radius:10px;border:1px solid var(--bd)}.ch.y{background:#ffe14d;color:#231f20;border-color:#e6c200}
+.t{font-size:40px;text-align:center;font-weight:700;font-variant-numeric:tabular-nums;direction:ltr;min-height:60px;line-height:60px}
+img.lg{width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.c.hd{width:96px;height:96px;padding:0;margin:8px auto;overflow:hidden;box-sizing:border-box}
+.c.hp{width:fit-content;margin:8px auto}
+a{color:var(--pr)}
+footer{text-align:center;opacity:.6;font-size:13px;margin:20px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const KEY='rudi_v1',E=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SN={1:'پانتومیم کلاسیک',2:'مرحله سرعتی',3:'مرحله امدادی',4:'نقاشی',5:'پانتومیم با محدودیت',6:'مرحله اسپیکر',7:'نقاشی با محدودیت'};
+const RULE={1:'یک دسته و سختی انتخاب کنید و کلمه را اجرا کنید.',2:'هشت کلمه را تا پایان زمان اجرا کنید.',3:'هر نوبت یک کلمه؛ بعد از هر کلمه نفر بعدی اجرا می‌کند. زمان ندارد.',4:'روی کاغذ بکشید و گروه حدس بزند.',7:'یک محدودیت انتخاب کنید و با همان محدودیت روی کاغذ بکشید.',5:'یک محدودیت انتخاب کنید و با آن اجرا کنید.',6:'کلمه‌ها را فقط با حرف زدن توضیح دهید.'};
+const D0=`امکان و گردشگری|4|6|پارک,موزه,هتل,تله‌کابین|برج میلاد,تخت جمشید,کویر لوت,بازار تجریش
+شهر و کشور|4|6|تهران,شیراز,ایتالیا,ترکیه|بندرعباس,ونزوئلا,سوئیس,اصفهان
+غذا|4|6|پیتزا,کباب,آش,ساندویچ|قیمه نثار,فسنجان,شله‌زرد,میرزاقاسمی
+حیوان|4|6|گربه,فیل,مرغ,ماهی|پنگوئن,آفتاب‌پرست,خارپشت,کانگورو
+شغل|4|6|پزشک,آشپز,راننده,معلم|خلبان,آتش‌نشان,نجار,آرایشگر
+مشاهیر|5|7|مولانا,حافظ,مسی,انیشتین|خیام,پیکاسو,چارلی چاپلین,رونالدو
+فیلم|5|7|تایتانیک,شیرشاه,فرار از زندان,یخ‌زده|اینسپشن,گلادیاتور,جدایی نادر از سیمین,بازمانده
+سریال|5|7|پایتخت,ویچر,فرندز,بازی تاج و تخت|شاهگوش,برکینگ بد,پدر,زخم کاری
+ضرب‌المثل|5|7|دیر آمدی زود رفتی,عجله کار شیطان است,آب از سرچشمه گل‌آلود است,کار نیکو کردن از پر کردن است|نه سیخ بسوزد نه کباب,با یک گل بهار نمی‌شود,هر که بامش بیش برفش بیشتر,از ماست که بر ماست
+ورزش|4|6|فوتبال,شنا,والیبال,بسکتبال|شمشیربازی,وزنه‌برداری,اسکی,کشتی`;
+const S0='گربه روی دیوار نشسته است,مادربزرگ در حال بافتن شال است,کودکی بادبادک پرواز می‌دهد,ماهیگیر در قایق ماهی می‌گیرد,خانواده دور سفره نشسته‌اند,پیرمرد در پارک شطرنج بازی می‌کند';
+const RA='با دست غیر اصلی,بدون برداشتن قلم از کاغذ,با چشم بسته,فقط با خط صاف,با دو دست همزمان,بدون نوشتن عدد و حرف,فقط با دایره,فقط با یک رنگ,بدون پاک کردن,با آرنج';
+const RP='فقط با یک دست,بدون حرکت پاها,با حرکت آهسته,بدون اشاره به هیچ چیز,با دست‌های پشت کمر,فقط با صورت,بدون حرکت سر,نشسته روی صندلی,فقط با نیم‌تنه بالا,با چشم بسته';
+function defaults(){const cats={};D0.split('\n').forEach(l=>{const[a,b,c,e,h]=l.split('|');cats[a]={p:[+b,+c],e:e.split(','),h:h.split(',')}});
+return{logo:'',cats,sent:S0.split(','),rA:RA.split(','),rP:RP.split(','),st:{1:{t:120,r:5},2:{t:150,p:1,n:8,r:1},3:{p:2,n:5},4:{t:120,p:3,r:1},5:{t:120,p:3,r:1},6:{t:120,p:1,n:5},7:{t:180,p:5,r:1}},pre:[{n:'گروه اول',s:[1,2,4]},{n:'گروه دوم',s:[5,7,6,3]}],def:0,v:2}}
+let cfg,G,A={tab:0,cat:0},armed=0;
+try{cfg=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!cfg||!cfg.cats)cfg=defaults();Object.assign(SN,cfg.nm||{});let PS=cfg.def||0;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(cfg))}catch(e){}};
+if(cfg.st&&cfg.st[6]&&cfg.st[6].n==null)cfg.st[6].n=5;
+if(cfg.v!=2){const o=cfg.st[4]||{};cfg.st[7]={t:o.t2||180,p:o.p2||5};delete o.t2;delete o.p2;cfg.pre=defaults().pre;cfg.def=0;cfg.v=2;save()}
+[1,2,4,5,7].forEach(i=>{const o=cfg.st[i];if(o&&o.r==null)o.r=i==1?(cfg.pre&&cfg.pre[0]&&cfg.pre[0].tn)||5:1});save();
+function ESP(){if(!Array.isArray(cfg.sp)||cfg.sp.length!=20)cfg.sp=Array.from({length:20},(_,i)=>(cfg.sp&&Array.isArray(cfg.sp[i])?cfg.sp[i]:[]))}
+const $=s=>document.querySelector(s),app=()=>({set innerHTML(h){$('#app').innerHTML=h;document.body.scrollTop=0}}),sh=a=>a[Math.floor(Math.random()*a.length)];
+const pool=()=>Object.values(cfg.cats).flatMap(c=>c.e.concat(c.h));
+const uw=()=>cfg.uw||(cfg.uw={}),mark=w=>{uw()[w]=1;save()};
+function pickW(a){if(!a.length)a=pool();const f=a.filter(w=>!G.used.has(w)),w=sh(f.length?f:a);G.used.add(w);mark(w);return w}
+const many=(a,n)=>Array.from({length:n},()=>pickW(a));
+const head=()=>cfg.logo?`<div class="c hd"><img class="lg" src="${cfg.logo}" alt="رودی"></div>`:`<div class="c hp"><div class="big">رودی</div></div>`;
+const sb=()=>`<div class="c sc"><span>${E(G.tm[0].n)}: ${G.tm[0].sc}</span><span>${E(G.tm[1].n)}: ${G.tm[1].sc}</span></div>`;
+const N=v=>+String(v).replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);
+function setSt(v,k,x){const n=N(x);if(x!==''&&!isNaN(n)&&n>0){cfg.st[v][k]=n;save()}}
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+
+function home(){clearInterval(G&&G.iv);app().innerHTML=head()+`<div class="c">نوع بازی را انتخاب کنید</div>`+cfg.pre.map((p,i)=>`<div class="c"><h3>${E(p.n)}</h3><p>${p.s.map(id=>E(SN[id])).join(' · ')}</p><button class="b" onclick="setup(${i})">انتخاب</button></div>`).join('')+`<footer>رودی | rudiapp.ir · </footer><button class="b g" onclick="A.v=0;A.k=null;adm()">⚙ پنل مدیریت</button>`}
+function setup(i){const g=k=>`<div class="c"><b>${k?'گروه دوم':'گروه اول'}</b><input id="n${k}" placeholder="نام گروه را بنویسید"></div>`;
+app().innerHTML=head()+`<div class="c"><h3>${E(cfg.pre[i].n)}</h3><p>${cfg.pre[i].s.map(id=>E(SN[id])).join(' · ')}</p></div>`+g(0)+g(1)+`<button class="b" onclick="start(${i})">ادامه</button><button class="b g" onclick="home()">← بازگشت</button>`}
+function start(i){const n=[0,1].map(k=>$('#n'+k).value.trim()||'گروه '+(k+1));
+G={tm:[0,1].map(k=>({n:n[k],sc:0,cu:new Set()})),all:cfg.pre[i].s,ids:[],done:new Set(),si:0,pl:[5,5],us:new Set(),used:new Set(),ru:{4:new Set(),5:new Set()}};hub()}
+function hub(){clearInterval(G.iv);app().innerHTML=head()+sb()+`<div class="c">یک مرحله را انتخاب کنید</div><div class="grid">${G.all.map(id=>`<button class="${G.done.has(id)?'g':''}" style="padding:24px 8px" ${G.done.has(id)?'disabled':''} onclick="run(${id})">${G.done.has(id)?'✅ ':''}${E(SN[id])}</button>`).join('')}</div><button class="b g" onclick="fin()">پایان بازی و اعلام برنده</button>`}
+function run(id){G.ids=[id];G.si=0;intro()}
+function intro(){const sid=G.sid=G.ids[G.si],id=G.id=sid==7?4:sid,q=G.q=[];
+const R=(id==3||id==6)?1:Math.max(1,+cfg.st[sid].r||1);for(let i=0;i<R;i++)q.push({t:0,b:sid==7},{t:1,b:sid==7});
+G.qi=0;app().innerHTML=head()+sb()+`<div class="c"><h2>${SN[sid]}</h2><p>${RULE[sid]}</p></div>${(sid==3||sid==6)?`<div class="c"><b>تعداد بازیکنان این مرحله</b>${G.tm.map((t,k)=>`<label>${E(t.n)}</label><input id="pl${k}" type="text" inputmode="numeric" data-n="1" value="${cfg.st[sid].n||5}">`).join('')}</div>`:''}<button class="b" onclick="begin()">شروع مرحله</button>`}
+function begin(){if(G.sid==3||G.sid==6)G.pl=[0,1].map(k=>Math.max(1,Math.min(50,+$('#pl'+k).value||5)));turn()}
+function turn(){if(G.qi>=G.q.length){G.si++;G.done.add(G.ids[0]);return hub()}
+const q=G.q[G.qi],id=G.id,S=cfg.st[id],c=G.cur={t:q.t,b:q.b,chk:[],sc:0,i:0};
+if(id==1)return pickCat();
+if(id==2)c.w=secW();else if(id==3)c.w=many(pool(),G.pl[c.t]);else if(id==6)c.w=many(pool(),Math.max(1,G.pl[c.t]-1));
+else if(id==4)c.w=[pickW(pool().concat(cfg.sent))];else c.w=[pickW(pool())];
+handoff(id==5||(id==4&&c.b)?'restr()':'play()')}
+function secW(){ESP();const f=()=>cfg.sp.map((a,i)=>i).filter(i=>cfg.sp[i].length&&!G.us.has(i));let av=f();if(!av.length){G.us.clear();av=f()}if(!av.length)return many(pool(),8);const i=sh(av);G.us.add(i);cfg.sp[i].slice(0,8).forEach(mark);return cfg.sp[i].slice(0,8)}
+function handoff(fn){app().innerHTML=head()+sb()+`<div class="c"><h3>گوشی را به اجراکننده بدهید</h3><p>نوبت ${E(G.tm[G.cur.t].n)}${G.cur.b?' · بخش با محدودیت':''}</p></div><button class="b" onclick="${fn}">نمایش کلمه</button>`}
+function pickCat(){const c=G.cur,tm=G.tm[c.t],av=Object.keys(cfg.cats).map((k,i)=>[k,i]).filter(x=>!tm.cu.has(x[0]));
+if(!av.length){G.qi++;return turn()}
+app().innerHTML=head()+sb()+`<div class="c">نوبت <b>${E(tm.n)}</b> · دسته را انتخاب کنید</div><div class="grid">${av.map(x=>`<button onclick="lvl(${x[1]})">${E(x[0])}</button>`).join('')}</div>`}
+function lvl(i){const k=Object.keys(cfg.cats)[i],p=cfg.cats[k].p;app().innerHTML=head()+sb()+`<div class="c">دسته: <b>${E(k)}</b></div><button class="b" onclick="go(${i},0)">آسان (${p[0]} امتیاز)</button><button class="b" onclick="go(${i},1)">سخت (${p[1]} امتیاز)</button>`}
+function go(i,l){const k=Object.keys(cfg.cats)[i],c=G.cur;G.tm[c.t].cu.add(k);c.pts=cfg.cats[k].p[l];c.w=[pickW(cfg.cats[k][l?'h':'e'])];handoff('play()')}
+function restr(){const c=G.cur,id=G.id,L=id==4?cfg.rA:cfg.rP,u=G.ru[id];
+if(u.size>=L.length)u.clear();
+G.opt=L;const av=L.map((r,k)=>k).filter(k=>!u.has(k));
+app().innerHTML=head()+sb()+`<div class="c">${id==5?`<div class="big">${E(c.w[0])}</div>`:''}<p>یک شماره انتخاب کنید تا محدودیت مشخص شود</p></div><div class="ng">${av.map(k=>`<button onclick="rs(${k})">${k+1}</button>`).join('')}</div>`}
+function rs(k){const c=G.cur;G.ru[G.id].add(k);c.r=G.opt[k];c.rn=k+1;play()}
+function play(){unlock();const c=G.cur,id=G.id,S=cfg.st[G.sid];c.T=id==3?0:S.t;c.P=id==1?c.pts:S.p;c.left=c.T;draw();clearInterval(G.iv);
+if(c.T)G.iv=setInterval(()=>{c.left--;const e=$('#tm');if(e)e.textContent=fmt(c.left);if(c.left<=0){clearInterval(G.iv);cfg.bell===0?alarm():horn();done(false)}},1000)}
+function draw(){const c=G.cur,id=G.id;let h=head()+sb()+'<div class="c">'+(c.T?`<div class="t" id="tm">${fmt(c.left)}</div>`:'')+(c.r?`<p>محدودیت ${c.rn}: <b>${E(c.r)}</b></p>`:'')+'</div>';
+if(id==2||id==6)h+=c.w.map((w,i)=>`<label class="c" style="display:block"><input type="checkbox" style="width:auto" ${c.chk[i]?'checked':''} onchange="G.cur.chk[${i}]=this.checked"> ${E(w)}</label>`).join('')+`<button class="b" onclick="done(true)">پایان</button>`;
+else if(id==3)h+=`<div class="c"><div class="big">${E(c.w[c.i])}</div><p>کلمه ${c.i+1} از ${c.w.length}</p></div><button class="b" onclick="rel(1)">✅ حدس زدند</button><button class="b g" onclick="rel(0)">⏭ رد کردن</button>`;
+else h+=`<div class="c"><div class="big" id="wd">${c.hid?'•••':E(c.w[0])}</div></div><button class="b g" onclick="tog()">نمایش / پنهان</button><button class="b" onclick="done(true)">✅ حدس زدند</button>`;
+app().innerHTML=h}
+function tog(){const c=G.cur;c.hid=!c.hid;$('#wd').textContent=c.hid?'•••':c.w[0]}
+function rel(g){const c=G.cur;if(g)c.sc+=c.P;c.i++;if(c.i>=c.w.length)return done(true);app().innerHTML=head()+sb()+`<div class="c"><h3>نفر بعدی</h3><p>گوشی را به نفر بعدی بدهید</p></div><button class="b" onclick="draw()">نمایش کلمه</button>`}
+function done(ok){clearInterval(G.iv);const c=G.cur,id=G.id,t=G.tm[c.t];
+const pts=id==2||id==6?c.chk.filter(Boolean).length*c.P:id==3?c.sc:ok?c.P:0;t.sc+=pts;G.qi++;
+app().innerHTML=head()+sb()+`<div class="c"><p>${ok?'✅':'⏰ وقت تمام شد'} ${E(t.n)}: ${pts} امتیاز</p><p>کلمه: ${c.w.map(E).join('، ')}</p></div><button class="b" onclick="turn()">ادامه</button>`}
+let AC;const unlock=()=>{try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();AC.resume&&AC.resume()}catch(e){}};
+function horn(){try{navigator.vibrate&&navigator.vibrate([600,150,600,150,600]);unlock();const a=AC,g=a.createGain();g.gain.value=.7;g.connect(a.destination);[0,.8,1.6].forEach(d=>{const o=a.createOscillator();o.type='sawtooth';o.frequency.value=330;o.connect(g);o.start(a.currentTime+d);o.stop(a.currentTime+d+.6)})}catch(e){}}
+function alarm(){try{navigator.vibrate&&navigator.vibrate([300,100,300]);const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator();o.connect(a.destination);o.frequency.value=660;o.start();setTimeout(()=>o.stop(),500)}catch(e){}}
+function fin(){const[a,b]=G.tm;app().innerHTML=head()+`<div class="c"><h2>🏆 پایان بازی</h2><p>${E(a.n)}: ${a.sc}</p><p>${E(b.n)}: ${b.sc}</p><h3>${a.sc==b.sc?'مساوی شد! 🤝':'برنده: '+E((a.sc>b.sc?a:b).n)}</h3></div><button class="b" onclick="home()">بازی دوباره</button><footer>رودی | rudiapp.ir</footer>`}
+
+/* ---------- پنل مدیریت ---------- */
+const FL={r:'تعداد نفرات',t:'زمان (ثانیه)',p:'امتیاز',n:'تعداد کلمه',t2:'زمان بخش با محدودیت',p2:'امتیاز بخش با محدودیت'};
+const lines=id=>$(id).value.split('\n').map(s=>s.trim()).filter(Boolean);
+const chips=v=>`<div>${v.map(w=>`<span class="ch ${uw()[w]?'y':''}">${E(w)}</span>`).join('')}</div>`;
+const ta=(id,l,v,hl)=>`<label>${l}</label>${hl?chips(v):''}<textarea id="${id}" rows="9">${E(v.join('\n'))}</textarea>`;
+function adm(){const v=A.v||0,ks=Object.keys(cfg.cats);
+ESP();let h=`<div class="c"><b>پنل مدیریت</b> · <a href="#" onclick="event.preventDefault();home();return false">بازگشت به بازی</a></div>`;
+if(!v)h+=`<div class="grid">${Object.keys(SN).map(id=>`<button style="padding:24px 8px" onclick="A.v=${id};adm()">${id}. ${SN[id]}</button>`).join('')}</div><button class="b g" onclick="A.v='pre';adm()">گروه‌های بازی (مرحله‌های هر نوع)</button><button class="b g" onclick="A.v='misc';adm()">لوگو و پشتیبان</button><button class="b g" onclick="cfg.uw={};save();adm()">پاک کردن هایلایت زرد لغت‌ها</button><button class="b g" onclick="cfg.bell=cfg.bell===0?1:0;save();adm()">بوق پایان زمان: ${cfg.bell===0?'خاموش':'روشن'}</button>`;
+else{h+=`<button class="g" onclick="${v==1&&A.k!=null?'A.k=null':(v==2&&A.s!=null)?'A.s=null':'A.v=0;A.k=null;A.s=null'};armed=0;adm()">← بازگشت</button>`;
+if(typeof v=='number'){h+=`<div class="c"><h2>${E(SN[v])}</h2><label>نام مرحله (در صفحه اول دیده می‌شود)</label><input value="${E(SN[v])}" oninput="cfg.nm=cfg.nm||{};cfg.nm[${v}]=this.value;SN[${v}]=this.value;save()" onchange="cfg.nm=cfg.nm||{};cfg.nm[${v}]=this.value;SN[${v}]=this.value;save()">${Object.keys(cfg.st[v]).filter(k=>!(v==2&&k=='n')).map(k=>`<label>${(v==3||v==6)&&k=='n'?'تعداد نفرات':FL[k]}</label><input type="text" inputmode="numeric" data-n="1" value="${cfg.st[v][k]}" oninput="setSt(${v},'${k}',this.value)" onchange="setSt(${v},'${k}',this.value)">`).join('')}</div>`;
+if(v==1){if(A.k==null)h+=`<div class="grid">${ks.map((k,i)=>`<button class="g" onclick="A.k=${i};adm()">${E(k)} (${cfg.cats[k].e.length+cfg.cats[k].h.length})</button>`).join('')}</div>`;
+else{const k=ks[A.k],c=cfg.cats[k];h+=`<div class="c"><h3>${E(k)}</h3><label>امتیاز آسان / سخت</label><div class="grid"><input id="pa" type="text" inputmode="numeric" data-n="1" value="${c.p[0]}"><input id="pb" type="text" inputmode="numeric" data-n="1" value="${c.p[1]}"></div>${ta('te','لغت‌های آسان (هر خط یک مورد · زرد = استفاده‌شده)',c.e,1)}${ta('th','لغت‌های سخت',c.h,1)}<button class="b" onclick="svc(${A.k})">ذخیره</button></div>`}}
+else if(v==4||v==7)h+=`<div class="c">${ta('ts','جمله‌های نقاشی (علاوه بر لغت‌های دسته‌ها · زرد = استفاده‌شده)',cfg.sent,1)}${ta('ra','محدودیت‌های نقاشی',cfg.rA)}<button class="b" onclick="svs()">ذخیره</button></div>`;
+else if(v==5)h+=`<div class="c">${ta('rp','محدودیت‌ها',cfg.rP)}<button class="b" onclick="svp()">ذخیره</button></div>`;
+else if(v==2)h+=(A.s==null?`<div class="c"><b>۲۰ قسمت لغت</b><p>هر قسمت ۸ لغت دارد. در هر نوبت یکی از قسمت‌های پر به‌صورت تصادفی انتخاب می‌شود.</p></div><div class="grid">${cfg.sp.map((a,i)=>`<button class="${a.length?'':'g'}" style="${a.some(w=>uw()[w])?'background:#ffe14d;color:#231f20':''}" onclick="A.s=${i};adm()">قسمت ${i+1} (${a.length}/8)</button>`).join('')}</div>`:`<div class="c"><h3>قسمت ${A.s+1}</h3>${ta('sw','لغت‌ها (هر خط یک لغت، حداکثر ۸ لغت · زرد = استفاده‌شده)',cfg.sp[A.s],1)}<button class="b" onclick="svsec(${A.s})">ذخیره</button></div>`);
+else h+=`<div class="c">لغت‌های این مرحله از دسته‌های مرحله ۱ برداشته می‌شود.<button class="b g" onclick="A.v=1;A.k=null;adm()">ویرایش لغت‌ها</button></div>`}
+else if(v=='pre')h+=cfg.pre.map((p,pi)=>`<div class="c"><input value="${E(p.n)}" oninput="cfg.pre[${pi}].n=this.value;save()" onchange="cfg.pre[${pi}].n=this.value;save()">`+p.s.map((id,j)=>`<div>${SN[id]} <button class="g" onclick="mv(${pi},${j},-1)">↑</button><button class="g" onclick="mv(${pi},${j},1)">↓</button><button class="g" onclick="rm(${pi},${j})">✕</button></div>`).join('')+Object.keys(SN).filter(id=>!p.s.includes(+id)).map(id=>`<button class="g" onclick="ad(${pi},${id})">+ ${SN[id]}</button>`).join('')+`<div><button class="${cfg.def==pi?'':'g'}" onclick="cfg.def=${pi};save();adm()">پیش‌فرض</button>${cfg.pre.length>1?`<button class="g" onclick="dp(${pi})">حذف</button>`:''}</div></div>`).join('')+`<button class="b" onclick="cfg.pre.push({n:'پیش‌تنظیم جدید',s:[1,2,3,4,5,6]});save();adm()">+ پیش‌تنظیم جدید</button>`;
+else h+=`<div class="c"><b>لوگو</b>${cfg.logo?`<img class="lg" src="${cfg.logo}" alt="">`:''}<input type="file" accept="image/*" onchange="lg(this.files[0])">${cfg.logo?`<button class="g" onclick="cfg.logo='';save();adm()">حذف لوگو</button>`:''}</div><div class="c"><b>پشتیبان</b><p>این متن را کپی و جایی نگه دارید. برای بازیابی، متن را اینجا بچسبانید.</p><textarea id="bk" rows="6">${E(JSON.stringify({...cfg,logo:''}))}</textarea><button class="b" onclick="rs2()">بازیابی از متن</button><button class="b g" onclick="rz()">${armed?'مطمئنی؟ دوباره بزن':'بازگشت به پیش‌فرض'}</button></div>`}
+app().innerHTML=h}
+function svc(i){const c=cfg.cats[Object.keys(cfg.cats)[i]];c.e=lines('#te');c.h=lines('#th');c.p=[+$('#pa').value,+$('#pb').value];save();adm()}
+function svsec(i){cfg.sp[i]=lines('#sw').slice(0,8);save();A.s=null;adm()}
+function svs(){cfg.sent=lines('#ts');cfg.rA=lines('#ra');save();adm()}
+function svp(){cfg.rP=lines('#rp');save();adm()}
+function mv(p,j,d){const s=cfg.pre[p].s,k=j+d;if(k<0||k>=s.length)return;[s[j],s[k]]=[s[k],s[j]];save();adm()}
+function rm(p,j){cfg.pre[p].s.splice(j,1);save();adm()}
+function ad(p,id){cfg.pre[p].s.push(+id);save();adm()}
+function dp(p){cfg.pre.splice(p,1);cfg.def=0;save();adm()}
+function lg(f){if(!f)return;const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const m=Math.min(i.width,i.height),c=document.createElement('canvas');c.width=c.height=Math.min(320,m);c.getContext('2d').drawImage(i,(i.width-m)/2,(i.height-m)/2,m,m,0,0,c.width,c.height);cfg.logo=c.toDataURL('image/png');save();adm()};i.src=r.result};r.readAsDataURL(f)}
+function rs2(){try{const d=JSON.parse($('#bk').value);if(!d.cats)throw 0;d.logo=cfg.logo;cfg=d;save();adm()}catch(e){alert('متن نامعتبر است')}}
+function rz(){if(!armed){armed=1;return adm()}armed=0;const l=cfg.logo;cfg=defaults();cfg.logo=l;save();adm()}
+addEventListener('input',e=>{const t=e.target;if(t&&t.dataset&&t.dataset.n){const v=t.value.replace(/[۰-۹]/g,c=>c.charCodeAt(0)-1776).replace(/[٠-٩]/g,c=>c.charCodeAt(0)-1632);if(v!==t.value)t.value=v}});
+function route(){location.hash=='#admin'?adm():home()}
+addEventListener('hashchange',route);route();
+</script>
+</body>
+</html>
