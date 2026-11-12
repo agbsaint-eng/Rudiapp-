@@ -34,6 +34,7 @@ img.lg{width:100%;height:100%;aspect-ratio:1/1;object-fit:cover;display:block}
 .c.hd{width:96px;height:96px;padding:0;margin:8px auto;overflow:hidden;box-sizing:border-box}
 .c.hp{width:fit-content;margin:8px auto}
 a{color:var(--pr)}
+.gear{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);left:14px;width:42px;height:42px;padding:0;border-radius:50%;font-size:20px}
 footer{text-align:center;opacity:.6;font-size:13px;margin:20px 0}
 </style>
 </head>
@@ -145,7 +146,7 @@ const poP=l=>{const i=l.lastIndexOf('|');return i<0?{t:l,s:''}:{t:l.slice(0,i),s
 const poH=l=>poP(l).t.split('/').map(x=>E(x.trim())).filter(Boolean).join('<br>');
 const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 
-function home(){clearInterval(G&&G.iv);app().innerHTML=head()+`<div class="c">نوع بازی را انتخاب کنید</div>`+cfg.pre.map((p,i)=>`<div class="c"><h3>${E(p.n)}</h3><p>${p.s.map(id=>E(SN[id])).join(' · ')}</p><button class="b" onclick="setup(${i})">انتخاب</button></div>`).join('')+`<footer>رودی | rudiapp.ir · </footer><button class="b g" onclick="A.v=0;A.k=null;adm()">⚙ پنل مدیریت</button>`}
+function home(){clearInterval(G&&G.iv);app().innerHTML='<button class="g gear" onclick="A.v=0;A.k=null;adm()" aria-label="مدیریت">⚙️</button>'+head()+`<div class="c">نوع بازی را انتخاب کنید</div>`+cfg.pre.map((p,i)=>`<div class="c"><h3>${E(p.n)}</h3><p>${p.s.map(id=>E(SN[id])).join(' · ')}</p><button class="b" onclick="setup(${i})">انتخاب</button></div>`).join('')+`<footer>رودی | rudiapp.ir · </footer>`}
 function setup(i){const g=k=>`<div class="c"><b>${k?'گروه دوم':'گروه اول'}</b><input id="n${k}" placeholder="نام گروه را بنویسید"></div>`;
 app().innerHTML=head()+`<div class="c"><h3>${E(cfg.pre[i].n)}</h3><p>${cfg.pre[i].s.map(id=>E(SN[id])).join(' · ')}</p></div>`+g(0)+g(1)+`<button class="b" onclick="start(${i})">ادامه</button><button class="b g" onclick="home()">← بازگشت</button>`}
 function start(i){const n=[0,1].map(k=>$('#n'+k).value.trim()||'گروه '+(k+1));
